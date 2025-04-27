@@ -17,6 +17,7 @@
 - **フレームワーク**: Spring Boot
 - **言語**: Java
 - **API 形式**: RESTful API
+- **Database**: PostgreSQL
 
 ### 選定理由
 
@@ -97,10 +98,10 @@ npx tailwindcss init -p
 # Spring Initializrを使用してプロジェクト作成
 # 依存関係:
 # - Spring Web
-# - Spring Data JPA
 # - Spring Boot DevTools
 # - Lombok
 # - Validation
+# - postgresql
 ```
 
 ## データフロー
@@ -109,7 +110,7 @@ npx tailwindcss init -p
 2. フロントエンドがバックエンド API に必要データを送信
 3. バックエンドでマクロ生成アルゴリズムを実行
 4. 生成されたマクロをフロントエンドに返却
-5. フロントエンドでユーザーにマクロを表示・編集・保存機能を提供
+5. フロントエンドでユーザーにマクロを表示・編集・機能を提供
 
 ## ディレクトリ構造
 
@@ -117,38 +118,35 @@ npx tailwindcss init -p
 
 ```
 /src
-  /assets        - 静的ファイル
-  /components    - 再利用可能なUIコンポーネント
-  /hooks         - カスタムReactフック
-  /pages         - 各ページコンポーネント
-  /services      - API通信などのサービス
-  /stores        - Zustandストア
-  /types         - TypeScript型定義
-  /utils         - ユーティリティ関数
-  /validation    - Zodバリデーションスキーマ
+   /assets        - 静的ファイル
+   /components    - 再利用可能なUIコンポーネント
+   /hooks         - カスタムReactフック
+   /feature       - 機能毎のコンポーネント
+   /services      - API通信などのサービス
+   /stores        - Zustandストア
+   /types         - TypeScript型定義
+   /utils         - ユーティリティ関数
+   /validation    - Zodバリデーションスキーマ
 ```
 
 ### バックエンド
 
 ```
-/src/main/java/com/crafterMacroGenerator
-  /config        - 設定クラス
-  /controller    - REST APIコントローラー
-  /service       - ビジネスロジック
-  /repository    - データアクセス
-  /entity        - データモデル
-  /dto           - データ転送オブジェクト
-  /algorithm     - マクロ生成アルゴリズム
-  /exception     - 例外処理
-  /util          - ユーティリティクラス
+/src/main/java/com/appricot/
+   /config        - 設定クラス
+   /controller    - REST APIコントローラー
+   /feature       - 機能の集合
+      /crafterMacroGenerator
+         /entity        - データモデル
+         /dto           - データ転送オブジェクト
+         /algorithm     - マクロ生成アルゴリズム
+         /config        - マクロ生成アルゴリズムの設定
+         /skills        - クラフタースキル
+   /exception     - 例外処理
+   /util          - ユーティリティクラス
 ```
 
 ## 今後の検討事項
-
-1. **データベース**:
-
-   - 現段階では未選定
-   - PostgreSQL, MySQL などの関係データベースが有力候補
 
 2. **認証・認可**:
 

@@ -84,6 +84,7 @@ public class DynamicProgrammingOptimizer implements MacroOptimizer {
         
         // 利用可能なアクションを評価
         OptimizationResult bestResult = null;
+        CraftingState initialState = currentState;
         
         for (CraftingAction action : availableActions) {
             // アクションが実行可能かチェック

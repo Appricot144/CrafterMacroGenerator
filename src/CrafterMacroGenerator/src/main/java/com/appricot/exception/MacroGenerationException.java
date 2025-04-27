@@ -1,4 +1,4 @@
-package com.cafterMacroGenerator.exception;
+package com.appricot.exception;
 
 public class MacroGenerationException extends RuntimeException {
     

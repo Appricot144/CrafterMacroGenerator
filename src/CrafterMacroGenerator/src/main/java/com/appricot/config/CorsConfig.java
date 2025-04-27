@@ -1,4 +1,4 @@
-package com.cafterMacroGenerator.config;
+package com.appricot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

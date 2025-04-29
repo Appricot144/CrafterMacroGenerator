@@ -84,6 +84,7 @@ public class Recipe {
 - 状態空間を探索し、最適なアクション系列を発見
 - メモ化により重複計算を排除
 - 終了条件：必要作業値達成、かつ品質の最大化
+  - マクロの品質向上：終了条件に合う探索結果からマクロ長が最短のものを選択
 
 ### 4.2 評価関数
 
@@ -94,7 +95,6 @@ public class Recipe {
 
 - CP 制約：利用可能な CP の範囲内
 - 耐久度制約：0 以下にならないこと
-- マクロ長制約：最大 15 アクション/マクロセット
 
 ## 5. ヒューリスティック最適化
 
@@ -107,7 +107,6 @@ public class Recipe {
 ### 5.2 探索空間最適化
 
 - **ビームサーチ**: 常に最も有望な K 個の状態のみを保持
-- **モンテカルロ木探索**: ランダムサンプリングによる部分探索
 - **A\*アルゴリズム**: 実コスト+推定残りコストによる最適経路探索
 
 ### 5.3 パターン認識
@@ -153,26 +152,34 @@ private List<CraftingAction> findOptimalMacroPath(
 ### 6.3 マクロテキスト生成
 
 ```java
-public String generateMacroText(List<CraftingAction> actions) {
-    StringBuilder sb = new StringBuilder();
-    int macroCount = 1;
-    int actionIndex = 0;
+private List<String> generateMacroText(List<CraftingAction> actions) {
+    	List<String> macroText = new ArrayList<>();
 
-    while (actionIndex < actions.size()) {
-        sb.append("/micon クラフターマクロ").append(macroCount).append("\n");
+        final int MAX_MACRO_LINE = 15;
+        int macroCount = 1;
+        int macroNum = (int) Math.ceil(actions.size() / MAX_MACRO_LINE);
 
-        int limit = Math.min(15, actions.size() - actionIndex);
-        for (int i = 0; i < limit; i++) {
-            CraftingAction action = actions.get(actionIndex + i);
-            sb.append("/ac \"").append(action.getName()).append("\" <wait.3>\n");
+        int actionIndex = 0;
+        StringBuilder sb = new StringBuilder();
+        while (actionIndex < actions.size()) {
+            int limit = Math.min(MAX_MACRO_LINE-1, actions.size() - actionIndex);
+            for (int i = 0; i < limit; i++) {
+                CraftingAction action = actions.get(actionIndex + i);
+                sb.append(String.format("/ac \"%s\" <wait.%d> \n", action.getName(), action.getExecuteTime()));
+            }
+
+            // マクロ終了SE
+            if (actions.size() != MAX_MACRO_LINE) {
+            	sb.append(String.format("/echo ### macro fin (%d/%d) <se.1>", macroCount, macroNum));
+            }
+
+            actionIndex += limit;
+            macroCount++;
+            macroText.add(sb.toString());
         }
 
-        actionIndex += limit;
-        macroCount++;
+        return macroText;
     }
-
-    return sb.toString();
-}
 ```
 
 ## 7. パフォーマンス最適化

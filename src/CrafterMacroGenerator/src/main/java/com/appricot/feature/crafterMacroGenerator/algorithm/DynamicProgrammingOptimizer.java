@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 動的計画法を使用したマクロ最適化アルゴリズムの実装
- * TODO read code
  */
 @Slf4j
 @Component
@@ -29,7 +28,7 @@ public class DynamicProgrammingOptimizer implements MacroOptimizer {
     private int exploredStatesCount;
     
     // 最大再帰深度（マクロの最大長に相当）
-    private static final int MAX_RECURSION_DEPTH = 50;
+    private static final int MAX_RECURSION_DEPTH = 90;
 
     @Override
     public OptimizationResult findOptimalMacroPath(
@@ -165,11 +164,12 @@ public class DynamicProgrammingOptimizer implements MacroOptimizer {
     
     /**
      * 状態のスコアを計算
+     * TODO 実行時間（マクロ長*<wait. n>）を考慮したい
      */
     private double calculateScore(CraftingState state, Recipe recipe, boolean qualityFocus) {
         double progressScore = (double) state.getCurrentProgress() / recipe.getRequiredProgress();
         double qualityScore = (double) state.getCurrentQuality() / recipe.getMaxQuality();
-        double cpEfficiencyScore = (double) state.getCurrentCP() / 500; // CP効率の最大値を500と仮定
+        double cpEfficiencyScore = (double) state.getCurrentCP() / 1000; // 1000を最大値と仮定
         
         if (qualityFocus) {
             // 品質優先の場合

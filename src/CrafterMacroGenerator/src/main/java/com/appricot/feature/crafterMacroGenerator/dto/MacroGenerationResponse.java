@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MacroGenerationResponse {
-    private String macroText;          // ゲーム内で使用可能なマクロテキスト
+    private List<String> macroText;          // ゲーム内で使用可能なマクロテキスト
     private List<String> actionSequence; // アクションの配列（名前のみ）
     
     private int finalQuality;          // 最終品質

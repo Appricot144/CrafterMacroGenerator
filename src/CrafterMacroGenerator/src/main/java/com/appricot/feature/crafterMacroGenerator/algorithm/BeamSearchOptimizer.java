@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * ビームサーチを使用したマクロ最適化アルゴリズムの実装
- * TODO read code
  */
 @Slf4j
 @Component
@@ -26,7 +25,7 @@ public class BeamSearchOptimizer implements MacroOptimizer {
     private static final int BEAM_WIDTH = 1000;
     
     // 最大探索深度（最大アクション数）
-    private static final int MAX_DEPTH = 30;
+    private static final int MAX_DEPTH = 90;
     
     // 探索状態数カウンター
     private int exploredStatesCount;
@@ -104,14 +103,14 @@ public class BeamSearchOptimizer implements MacroOptimizer {
                 }
             }
             
-            // 次のビームを上位BEAM_WIDTH個に制限
+            // 次のビームをBEAM_WIDTH個に制限
             currentBeam = nextBeam.stream()
                     .sorted(Comparator.comparingDouble((BeamNode n) -> n.score).reversed())
                     .limit(BEAM_WIDTH)
                     .collect(Collectors.toList());
         }
         
-        // 最良結果が見つからなかった場合
+        // 終了条件に見合うマクロがなかった場合
         if (bestNode == null) {
             // 現在のビームから最良ノードを選択
             bestNode = currentBeam.stream()
@@ -132,12 +131,13 @@ public class BeamSearchOptimizer implements MacroOptimizer {
     
     /**
      * 状態のスコアを計算
+     * TODO 実行時間（マクロ長*<wait. n>）を考慮したい
      */
     private double calculateScore(CraftingState state, Recipe recipe, boolean qualityFocus) {
         double progressScore = (double) state.getCurrentProgress() / recipe.getRequiredProgress();
         double qualityScore = (double) state.getCurrentQuality() / recipe.getMaxQuality();
-        double cpEfficiencyScore = (double) state.getCurrentCP() / 500; // CP効率の最大値を500と仮定
-        double durabilityScore = (double) state.getRemainingDurability() / 70; // 耐久効率の最大値を70と仮定
+        double cpEfficiencyScore = (double) state.getCurrentCP() / 1000; //1000 を最大値と仮定
+        double durabilityScore = (double) state.getRemainingDurability() / recipe.getBaseDurability();
         
         if (qualityFocus) {
             // 品質優先の場合

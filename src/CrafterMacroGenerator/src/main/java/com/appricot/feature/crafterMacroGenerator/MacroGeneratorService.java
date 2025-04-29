@@ -49,7 +49,7 @@ public class MacroGeneratorService {
         CraftingState finalState = applyActions(initialState, result.getActionPath());
         
         // マクロテキスト生成
-        String macroText = generateMacroText(result.getActionPath());
+        List<String> macroText = generateMacroText(result.getActionPath());
         
         // アクション名のリスト作成
         List<String> actionSequence = result.getActionPath()
@@ -116,30 +116,33 @@ public class MacroGeneratorService {
         return currentState;
     }
     
-    // TODO wait time
-    private String generateMacroText(List<CraftingAction> actions) {
-        StringBuilder sb = new StringBuilder();
+    private List<String> generateMacroText(List<CraftingAction> actions) {
+    	List<String> macroText = new ArrayList<>();
+
+        final int MAX_MACRO_LINE = 15;
         int macroCount = 1;
+        int macroNum = (int) Math.ceil(actions.size() / MAX_MACRO_LINE);
+
         int actionIndex = 0;
-
+        StringBuilder sb = new StringBuilder();
         while (actionIndex < actions.size()) {
-            sb.append("/micon クラフターマクロ").append(macroCount).append("\n");
-
-            int limit = Math.min(15, actions.size() - actionIndex);
+            int limit = Math.min(MAX_MACRO_LINE-1, actions.size() - actionIndex);
             for (int i = 0; i < limit; i++) {
                 CraftingAction action = actions.get(actionIndex + i);
-                sb.append("/ac \"").append(action.getName()).append("\" <wait.3>\n");
+                sb.append(String.format("/ac \"%s\" <wait.%d> \n", action.getName(), action.getExecuteTime()));
             }
 
-            if (actionIndex + limit < actions.size()) {
-                sb.append("\n");  // マクロ間に空行を挿入
+            // マクロ終了SE
+            if (actions.size() != MAX_MACRO_LINE) {
+            	sb.append(String.format("/echo ### macro fin (%d/%d) <se.1>", macroCount, macroNum));
             }
             
             actionIndex += limit;
-            macroCount++;
+            macroCount++;            
+            macroText.add(sb.toString());
         }
 
-        return sb.toString();
+        return macroText;
     }
     
     public List<String> getAvailableSkills(int level) {

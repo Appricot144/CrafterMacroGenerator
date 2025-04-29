@@ -37,7 +37,7 @@ public class CraftingState {
         return cloned;
     }
 
-    // メモ化のためのハッシュコード最適化
+    // メモ用ハッシュコード最適化
     @Override
     public int hashCode() {
         return Objects.hash(
@@ -50,7 +50,7 @@ public class CraftingState {
         );
     }
 
-    // メモ化のための等価性判定最適化
+    // メモ用等価性判定最適化
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

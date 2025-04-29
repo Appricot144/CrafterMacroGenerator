@@ -26,8 +26,8 @@ public class AlgorithmConfig {
             DynamicProgrammingOptimizer dpOptimizer,
             BeamSearchOptimizer beamSearchOptimizer) {
         
-        // 設定やレシピの複雑さに応じて切り替えることが可能
-        // デフォルトではビームサーチを使用（速度と品質のバランスが良い）
+        // 設定やレシピの複雑さに応じて切り替える
+        // デフォルトではビームサーチを使用
         return beamSearchOptimizer;
     }
     
@@ -36,12 +36,12 @@ public class AlgorithmConfig {
      * @return アルゴリズム設定
      */
     @Bean
-    public AlgorithmSettings algorithmSettings() {
+    public AlgorithmSettings algorithmSettings(int maxDepth, int maxBeamWidth) {
         return AlgorithmSettings.builder()
-                .maxRecursionDepth(50)
-                .beamWidth(1000)
+                .maxRecursionDepth(maxDepth)
+                .beamWidth(maxBeamWidth)
                 .useParallelization(true)
-                .maxExecutionTimeMs(10000) // 最大実行時間 10秒
+                .maxExecutionTimeMs(1200000) // 最大実行時間 2分
                 .build();
     }
     
@@ -85,7 +85,7 @@ public class AlgorithmConfig {
             private int maxRecursionDepth = 50;
             private int beamWidth = 1000;
             private boolean useParallelization = true;
-            private long maxExecutionTimeMs = 10000;
+            private long maxExecutionTimeMs = 1200000;
             
             public Builder maxRecursionDepth(int maxRecursionDepth) {
                 this.maxRecursionDepth = maxRecursionDepth;

@@ -4,14 +4,12 @@ import com.appricot.feature.crafterMacroGenerator.entity.ActionType;
 import com.appricot.feature.crafterMacroGenerator.entity.CraftingAction;
 import com.appricot.feature.crafterMacroGenerator.entity.CraftingState;
 
-// TODO CraftingActionのみにし、個別のアクションクラスを消す。
-// xivapi から取得した値でCraftingActionインスタンスを作成する
 public class BasicSynthesis extends CraftingAction {
     
     private static final int PROGRESS_INCREASE = 120; // 基本効率
     
     public BasicSynthesis() {
-        super("作業", 0, ActionType.PROGRESS, 3, 10); // 作業スキル、CP消費0
+        super("作業", 0, ActionType.PROGRESS, 3, 10);
     }
 
     @Override

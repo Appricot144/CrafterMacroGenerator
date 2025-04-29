@@ -11,7 +11,7 @@ public abstract class CraftingAction {
     private String name;
     private int cpCost;
     private ActionType type;
-    private int durabilityCost;
+    private int baseDurabilityCost;
     private int executeTime;
 
     public abstract CraftingState apply(CraftingState currentState);
